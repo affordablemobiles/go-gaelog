@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	logr "github.com/sirupsen/logrus"
@@ -16,8 +17,12 @@ const (
 	traceContextHeaderName = "X-Cloud-Trace-Context"
 )
 
-func traceID(projectID, trace string) string {
-	return fmt.Sprintf("projects/%s/traces/%s", projectID, trace)
+func traceID(r *http.Request) string {
+	return fmt.Sprintf(
+		"projects/%s/traces/%s",
+		os.Getenv("GOOGLE_CLOUD_PROJECT"),
+		strings.Split(r.Header.Get(traceContextHeaderName), "/")[0],
+	)
 }
 
 func Debugf(r *http.Request, data interface{}, format string, v ...interface{}) {
@@ -51,7 +56,7 @@ func Fatalf(r *http.Request, data interface{}, format string, v ...interface{}) 
 func getLogger(r *http.Request, data interface{}) *logr.Entry {
 	return logr.WithContext(r.Context()).WithFields(logr.Fields{
 		"context":                      data,
-		"logging.googleapis.com/trace": traceID(os.Getenv("GOOGLE_CLOUD_PROJECT"), r.Header.Get(traceContextHeaderName)),
+		"logging.googleapis.com/trace": traceID(r),
 	})
 }
 
