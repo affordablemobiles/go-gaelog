@@ -20,35 +20,35 @@ func traceID(projectID, trace string) string {
 	return fmt.Sprintf("projects/%s/traces/%s", projectID, trace)
 }
 
-func Debugf(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Debugf(format, v...)
+func Debugf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Debugf(format, v...)
 }
 
-func Infof(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Infof(format, v...)
+func Infof(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Infof(format, v...)
 }
 
-func Warnf(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Warnf(format, v...)
+func Warnf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Warnf(format, v...)
 }
 
-func Errorf(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Errorf(format, v...)
+func Errorf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Errorf(format, v...)
 }
 
-func Criticalf(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Errorf(format, v...)
+func Criticalf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Errorf(format, v...)
 }
 
-func Fatalf(r *http.Request, format string, v ...interface{}) {
-	getLogger(r).Fatalf(format, v...)
+func Fatalf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	getLogger(r, data).Fatalf(format, v...)
 }
 
-func getLogger(r *http.Request) *logr.Entry {
-	return logr.WithContext(r.Context()).WithField(
-		"logging.googleapis.com/trace",
-		traceID(os.Getenv("GOOGLE_CLOUD_PROJECT"), r.Header.Get(traceContextHeaderName)),
-	)
+func getLogger(r *http.Request, data interface{}) *logr.Entry {
+	return logr.WithContext(r.Context()).WithFields(logr.Fields{
+		"context":                      data,
+		"logging.googleapis.com/trace": traceID(os.Getenv("GOOGLE_CLOUD_PROJECT"), r.Header.Get(traceContextHeaderName)),
+	})
 }
 
 func init() {
