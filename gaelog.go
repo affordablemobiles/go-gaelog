@@ -60,9 +60,9 @@ func init() {
 
 	logr.SetFormatter(&logr.JSONFormatter{
 		FieldMap: logr.FieldMap{
-			log.FieldKeyTime:  "timestamp",
-			log.FieldKeyLevel: "severity",
-			log.FieldKeyMsg:   "message",
+			logr.FieldKeyTime:  "timestamp",
+			logr.FieldKeyLevel: "severity",
+			logr.FieldKeyMsg:   "message",
 		},
 		TimestampFormat: time.RFC3339Nano,
 	})
