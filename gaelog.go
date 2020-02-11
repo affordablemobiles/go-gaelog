@@ -24,6 +24,10 @@ func Debugf(r *http.Request, data interface{}, format string, v ...interface{}) 
 	getLogger(r, data).Debugf(format, v...)
 }
 
+func Printf(r *http.Request, data interface{}, format string, v ...interface{}) {
+	Infof(r, data, format, v...)
+}
+
 func Infof(r *http.Request, data interface{}, format string, v ...interface{}) {
 	getLogger(r, data).Infof(format, v...)
 }
