@@ -34,9 +34,11 @@ func main() {
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	glog.Printf(r, nil, "I'm logging, %s", "wuhoo!")
+	ctx := glog.GetContext(r)
 
-	glog.Errorf(r, map[string]interface{}{
+	glog.Printf(ctx, nil, "I'm logging, %s", "wuhoo!")
+
+	glog.Errorf(ctx, map[string]interface{}{
 		"code":    403,
 		"message": "Permission Denied",
 	}, "HTTP ERROR")
