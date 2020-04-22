@@ -20,6 +20,11 @@ const (
 	traceIDContext = "glog-traceID"
 )
 
+func Middleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	ctx := GetContext(r)
+	next(w, r.WithContext(ctx))
+}
+
 func GetContext(r *http.Request) context.Context {
 	return SetupContext(
 		r.Context(),
